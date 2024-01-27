@@ -1,4 +1,4 @@
-import SoccerBall
+from shotshaper.objects.SoccerBall import SoccerBall
 
 class TableTennisBall(SoccerBall):
     """

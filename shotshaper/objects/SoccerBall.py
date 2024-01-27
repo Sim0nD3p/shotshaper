@@ -1,4 +1,5 @@
-from ..projectile import _SphericalParticleAirResistanceSpin
+
+from shotshaper.SphericalParticules import _SphericalParticleAirResistanceSpin
 from numpy import exp
 
 

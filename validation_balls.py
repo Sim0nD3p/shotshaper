@@ -14,9 +14,14 @@ Specifically, this includes data for:
       to low weight
 """
 
-from shotshaper.projectile import SoccerBall, ShotPutBall, TableTennisBall
+from shotshaper.objects.TableTennisBall import TableTennisBall
+from shotshaper.objects.SoccerBall import SoccerBall
+from shotshaper.objects.ShotPutBall import ShotPutBall
 import matplotlib.pyplot as pl
 import numpy as np
+
+
+
 
 cases = ('Shot','Soccer ball','Table tennis ball')
 projectiles = (ShotPutBall('M'), SoccerBall(), TableTennisBall())

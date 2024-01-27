@@ -1,4 +1,5 @@
-from ..projectile import _Projectile, _SphericalParticleAirResistance
+from ..projectile import _Projectile
+from shotshaper.SphericalParticules import  _SphericalParticleAirResistance
 
 class ShotPutBall(_SphericalParticleAirResistance):
     """
