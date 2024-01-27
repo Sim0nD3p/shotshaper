@@ -5,7 +5,8 @@ Created on Wed Jan 12 15:53:30 2022
 @author: 2913452
 """
 
-from shotshaper.projectile import DiscGolfDisc
+# from shotshaper.projectile import DiscGolfDisc
+from shotshaper.objects.DiscGolfDisc import DiscGolfDisc
 import matplotlib.pyplot as pl
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
