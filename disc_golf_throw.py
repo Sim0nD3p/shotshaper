@@ -7,15 +7,18 @@ from shotshaper.objects.DiscGolfDisc import DiscGolfDisc
 import matplotlib.pyplot as pl
 import numpy as np
 
+
+# Defining the disc and initial conditions
 d = DiscGolfDisc('dd2')
 U = 24.2
-omega = 116.8
+omega = 116.8   # spin rate of the disc
 z0 = 1.3
 pos = np.array((0,0,z0))
 pitch = 15.5
 nose = 0.0
-roll = 14.7
+roll = 5
 
+# Creating the shot (shoot method of DiscGolfDisc)
 shot = d.shoot(speed=U, omega=omega, pitch=pitch, 
                position=pos, nose_angle=nose, roll_angle=roll)
 

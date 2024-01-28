@@ -157,14 +157,23 @@ class DiscGolfDisc(_Projectile):
             
     
     def initialize_shot(self, **kwargs):
-        U = kwargs["speed"]
+        """_summary_
+
+        Returns:
+            y0: vector with positions, angles, velocities
+            omega: spin rate
+        """
+
+        print('initialize shot ', kwargs)
+        U = kwargs["speed"]     # assigning speed scalar
         
         kwargs.setdefault('yaw', 0.0) 
         #kwargs.setdefault('omega', self.empirical_spin(U)) 
         
+        # Setting pitch, yaw and omega
         pitch = radians(kwargs["pitch"])
         yaw = radians(kwargs["yaw"])
-        omega = kwargs["omega"]
+        omega = kwargs["omega"]         # spin rate
         
         # phi, theta
         roll_angle = radians(kwargs["roll_angle"]) # phi
@@ -187,7 +196,7 @@ class DiscGolfDisc(_Projectile):
         w = U*sin(pitch)
         
         # Initialize angles
-        attitude = array([roll_angle, nose_angle, 0])
+        attitude = array([roll_angle, nose_angle, 0])       #What is attitude????
         # The initial orientation of the disc must also account for the
         # angle of the throw itself, i.e. the launch angle. 
         attitude += matmul(T_12(attitude), array((0, pitch, 0)))
@@ -202,7 +211,7 @@ class DiscGolfDisc(_Projectile):
 
         y0, omega = self.initialize_shot(**kwargs)
                
-        shot = self._shoot(self.advance, y0, omega)
+        shot = self._shoot(self.advance, y0, omega)     # methood of Projectile
         
         return shot
     
@@ -232,19 +241,35 @@ class DiscGolfDisc(_Projectile):
         return arc_length,degrees(alphas),degrees(betas),lifts,drags,moms,degrees(rolls)
             
     def forces(self, x, u, a, omega):
+        """Calculates forces and moment acting on the disc
+
+        Args:
+            x (array): Position vector
+            u (array): Speed vector
+            a (array): Euler angles vector
+            omega (_type_): Spin rate of the disc
+        Returns:
+            _type_: _description_
+        """
         # Velocity in body axes
         urel = u - environment.wind_abl(x[2])
+        # print('u1=', urel, '  ||u1||=', norm(urel))
         u2 = matmul(T_12(a), urel)
+        # print('u2=', u2, '  ||u2||=', norm(u2))
         # Side slip angle is the angle between the x and y velocity
         beta = -arctan2(u2[1], u2[0])
         # Velocity in zero side slip axes
         u3 = matmul(T_23(beta), u2)
-        # Angle of attack is the angle between 
-        # vertical and horizontal velocity
+        # print('u3', u3, '  ||u3||=', norm(u3))
+
+        # Angle of attack is the angle between vertical and horizontal velocity
         alpha = -arctan2(u3[2], u3[0])
+
         # Velocity in wind system, where forces are to be calculated
         u4 = matmul(T_34(alpha), u3)
-        
+        # print('u4', u4, '  ||u4||=', norm(u4))
+        # print('------------------------------')
+
         # Convert gravitational force from Earth to Wind axes
         g = array((0, 0, self.mass*environment.g))
         g4 = T_14(g, a, beta, alpha)
@@ -258,12 +283,13 @@ class DiscGolfDisc(_Projectile):
         Fl = q*S*self.Cl(alpha)
         M  = q*S*D*self.Cm(alpha)
         
+        
         return alpha, beta, Fd, Fl, M, g4
         
     def advance(self, t, vec, omega):
-        x = vec[0:3]
-        u = vec[3:6]
-        a = vec[6:9]
+        x = vec[0:3]    # position
+        u = vec[3:6]    # velocity
+        a = vec[6:9]    # angles
         
         alpha, beta, Fd, Fl, M, g4 = self.forces(x, u, a, omega)
         

@@ -33,6 +33,9 @@ def stopped(t, y, *args):
     return U - 1e-4
 
 class Shot:
+    """Container for the results of the trajectory (position, velocity, time)
+        attitude??
+    """
     def __init__(self,t,x,v,att=None):
         self.time = t
         self.position = x
@@ -54,23 +57,36 @@ class _Projectile(ABC):
         pass
    
     def _shoot(self, advance_function, y0, *args):
+        """Solve the IVP and returns Shot object
+
+        Args:
+            advance_function (function): calculates forces and moment acting for given conditions
+            y0 (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         # Setup terminaison events for the solver
         hit_ground.terminal = True
         hit_ground.direction = -1
         stopped.terminal = True
         stopped.direction = -1
         
+        # Solving ODE
         sol = solve_ivp(advance_function,[0,T_END],y0,
                         dense_output=True,args=args,
                         method='RK45',
                         events=(hit_ground,stopped))
         
-        t = linspace(0,sol.t[-1],N_STEP)
+
+        t = linspace(0,sol.t[-1],N_STEP)    # making vector with all results
         
-        f = sol.sol(t)
-        pos = array([f[0],f[1],f[2]])
-        vel = array([f[3],f[4],f[5]])
+        f = sol.sol(t)              # dealing with the solution from solve_ivp
+        pos = array([f[0],f[1],f[2]])   # position vector
+        vel = array([f[3],f[4],f[5]])   # velocity vector
         
+
+        # Creating shot with solution of the problem
         if len(f) <= 6:
             shot = Shot(t, pos, vel)
         else:    
