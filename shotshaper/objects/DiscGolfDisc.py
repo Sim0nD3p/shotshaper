@@ -157,23 +157,22 @@ class DiscGolfDisc(_Projectile):
             
     
     def initialize_shot(self, **kwargs):
-        """_summary_
+        """Gets velocity from speed and angles, transforms angles 
 
         Returns:
             y0: vector with positions, angles, velocities
             omega: spin rate
         """
 
-        print('initialize shot ', kwargs)
+        
         U = kwargs["speed"]     # assigning speed scalar
         
-        kwargs.setdefault('yaw', 0.0) 
         #kwargs.setdefault('omega', self.empirical_spin(U)) 
         
         # Setting pitch, yaw and omega
         pitch = radians(kwargs["pitch"])
-        yaw = radians(kwargs["yaw"])
-        omega = kwargs["omega"]         # spin rate
+        yaw = radians(kwargs.setdefault('yaw', 0.0))    # returns 0 if not present in kwargs, convert in radians
+        omega = kwargs["omega"]                         # spin rate
         
         # phi, theta
         roll_angle = radians(kwargs["roll_angle"]) # phi
@@ -192,14 +191,17 @@ class DiscGolfDisc(_Projectile):
         # Initialize velocity
         xy = cos(pitch)
         u = U*xy*cos(yaw)
-        v = U*xy*sin(-yaw)
+        v = U*xy*sin(-yaw)  # w = 0; axes are aligned with shot
         w = U*sin(pitch)
+        
         
         # Initialize angles
         attitude = array([roll_angle, nose_angle, 0])       #What is attitude????
         # The initial orientation of the disc must also account for the
         # angle of the throw itself, i.e. the launch angle. 
+        print(T_12(attitude))
         attitude += matmul(T_12(attitude), array((0, pitch, 0)))
+        print(attitude)
         
         #attitude = matmul(T_23(yaw),attitude)
         #attitude += matmul(T_12(attitude), array((0, pitch, 0)))
@@ -249,7 +251,7 @@ class DiscGolfDisc(_Projectile):
             a (array): Euler angles vector
             omega (_type_): Spin rate of the disc
         Returns:
-            _type_: _description_
+            _type_: Forces and moment
         """
         # Velocity in body axes
         urel = u - environment.wind_abl(x[2])

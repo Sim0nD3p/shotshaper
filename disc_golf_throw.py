@@ -17,10 +17,12 @@ pos = np.array((0,0,z0))
 pitch = 15.5
 nose = 0.0
 roll = 5
+yaw = 0
 
 # Creating the shot (shoot method of DiscGolfDisc)
+    # added yaw, default to 0 if not presented (2024-01-28)
 shot = d.shoot(speed=U, omega=omega, pitch=pitch, 
-               position=pos, nose_angle=nose, roll_angle=roll)
+               position=pos, nose_angle=nose, roll_angle=roll, yaw=yaw)
 
 # Plot trajectory
 pl.figure(1)
