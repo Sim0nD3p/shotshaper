@@ -1,4 +1,4 @@
-from .. import environment
+from shotshaper import environment
 from ..projectile import _Projectile
 from scipy.interpolate import interp1d
 import os
@@ -310,7 +310,6 @@ class DiscGolfDisc(_Projectile):
         angvel1 = T_31(angvel3, a, beta)
         
         return concatenate((u,acc1,angvel1)) 
-
     
     
 

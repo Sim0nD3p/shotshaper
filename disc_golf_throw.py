@@ -15,8 +15,8 @@ omega = 116.8   # spin rate of the disc
 z0 = 1.3
 pos = np.array((0,0,z0))
 pitch = 15.5
-nose = 0.0
-roll = 5
+nose = 2
+roll = 0
 yaw = 0
 
 # Creating the shot (shoot method of DiscGolfDisc)
