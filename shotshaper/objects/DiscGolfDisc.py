@@ -102,6 +102,8 @@ class DiscGolfDisc(_Projectile):
         
         # NB! The stored data uses degrees for the angle
         return self.Cl_func(degrees(self._normalize_angle(alpha)))
+    
+    
 
     def Cm(self, alpha): 
         """
@@ -114,14 +116,43 @@ class DiscGolfDisc(_Projectile):
     
         # NB! The stored data uses degrees for the angle
         return self.Cm_func(degrees(self._normalize_angle(alpha)))
+    
+    def plot_coeff_fun(self, fig=None):
+        if fig:
+            fig.add_subplot(122)
+
+        min_angle = -45
+        max_angle = 45
+        coeffs = zeros((4, max_angle-min_angle))
+        for angle in range(min_angle, max_angle):
+            print(angle)
+            coeffs[0, angle] = angle
+            coeffs[1, angle] = self.Cd_func(angle)
+            coeffs[2, angle] = self.Cl_func(angle)
+            coeffs[3, angle] = self.Cm_func(angle)
+            
+        
+        print(coeffs[0, :])
+        ax = pl.gca()
+        ax.plot(coeffs[0, :], coeffs[2, :], label='$C_L$')
+        ax.plot(coeffs[0, :], coeffs[1, :], 'C1',label='$C_D$')
+        ax.plot(coeffs[0, :], coeffs[3, :], 'C3',label='$C_M$')
+
+        return ax
+        
 
 
-    def plot_coeffs(self, color='k'):
+
+    def plot_coeffs(self, fig=None, color='k'):
         """
         Utility function to quickly explore disc coefficients.
 
         :param string color: Matplotlib color key. Default value is k, i.e. black.
         """
+
+        if fig:
+            fig.add_subplot(121)
+            
         pl.plot(self._alpha, self._Cl, 'C0-o',label='$C_L$')
         pl.plot(self._alpha, self._Cd, 'C1-o',label='$C_D$')
         pl.plot(self._alpha, 3*self._Cm, 'C2-o',label='$C_M$')
@@ -199,9 +230,9 @@ class DiscGolfDisc(_Projectile):
         attitude = array([roll_angle, nose_angle, 0])       #What is attitude????
         # The initial orientation of the disc must also account for the
         # angle of the throw itself, i.e. the launch angle. 
-        print(T_12(attitude))
+        
         attitude += matmul(T_12(attitude), array((0, pitch, 0)))
-        print(attitude)
+        
         
         #attitude = matmul(T_23(yaw),attitude)
         #attitude += matmul(T_12(attitude), array((0, pitch, 0)))

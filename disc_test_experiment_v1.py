@@ -14,9 +14,9 @@ U = 24.2
 omega = 116.8   # spin rate of the disc
 z0 = 1.3
 pos = np.array((0,0,z0))
-pitch = 20
-nose = 20
-roll = 10
+pitch = 5
+nose = 10
+roll = 0
 yaw = 0
 
 # Creating the shot (shoot method of DiscGolfDisc)
@@ -24,10 +24,26 @@ yaw = 0
 shot = d.shoot(speed=U, omega=omega, pitch=pitch, 
                position=pos, nose_angle=nose, roll_angle=roll, yaw=yaw)
 
+# Aller chercher les proprietes du disque
+
+fig_specs, axs = pl.subplots(1, 1, figsize=(4, 4))
+#axs.plot(d.Cl_func)
+#fig=fig_specs
+d.plot_coeffs()
+d.plot_coeff_fun()
+
+
+
 # Plot trajectory
-pl.figure(1)
+fig, (ax1, ax2) = pl.subplots(2, 1, figsize=(8, 6))
 x,y,z = shot.position
-pl.plot(x,y)
+ax1.plot(x,y)
+ax1.set_title('Vue de haut')
+
+ax2.plot(x, z)
+ax2.set_title('Vue de cote')
+
+pl.tight_layout()
 
 pl.xlabel('Distance (m)')
 pl.ylabel('Drift (m)')
